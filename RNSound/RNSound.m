@@ -174,10 +174,16 @@ RCT_EXPORT_METHOD(setCategory
 
     if (category) {
         if (mixWithOthers) {
+#if TARGET_OS_IOS
             [session setCategory:category
                      withOptions:AVAudioSessionCategoryOptionMixWithOthers |
                                  AVAudioSessionCategoryOptionAllowBluetooth
                            error:nil];
+#else
+            [session setCategory:category
+                     withOptions:AVAudioSessionCategoryOptionMixWithOthers
+                           error:nil];
+#endif
         } else {
             [session setCategory:category error:nil];
         }
@@ -360,6 +366,7 @@ RCT_EXPORT_METHOD(getCurrentTime
 }
 
 RCT_EXPORT_METHOD(setSpeakerPhone : (BOOL)on) {
+#if TARGET_OS_IOS
     AVAudioSession *session = [AVAudioSession sharedInstance];
     if (on) {
         [session overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker
@@ -369,6 +376,7 @@ RCT_EXPORT_METHOD(setSpeakerPhone : (BOOL)on) {
                                    error:nil];
     }
     [session setActive:true error:nil];
+#endif
 }
 
 + (BOOL)requiresMainQueueSetup {
